@@ -12,12 +12,14 @@ This library allows you to incorporate multitenancy into a .net core 2.0 web api
      `services.AddScoped<IMultiTenancyResolverService, ExampleMultiTenancyResolverService>();`
 
      where `ExampleMultiTenancyResolverService` is the name of your concrete implementation of the provided `MultiTenancyResolverService` abstract class / `IMultiTenancyResolverService` interface
-   * Add the options for the middleware. This only contains a `HeaderKey` and this will be the header key used in the request that contains the account id of the tenant whose database you want to reference for the particular request.
+   * Add the options for the middleware. This only contains a `UseHeaderKey` property and a `HeaderKey` property and this will be the header key used in the request that contains the account id of the tenant whose database you want to reference for the particular request... Or set `UseHeaderKey` to `false` if your code will be doing things a different way.
      
      ```
      var multiTenancyMiddlewareOptions = new MultiTenancyMiddlewareOptions
      {
+         UseHeaderKey = true,
          TenantIdHeaderKey = "Account-Id"
+
      };
 
      services.AddSingleton(multiTenancyMiddlewareOptions);

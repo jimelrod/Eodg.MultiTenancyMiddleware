@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Jelly.MultiTenantExample.MultiTenancyMiddleware
+namespace Eodg.MultiTenancy.Middleware
 {
     /// <summary>
     /// Standard run-of-the-mill `Exception`

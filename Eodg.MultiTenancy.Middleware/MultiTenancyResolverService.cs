@@ -1,4 +1,4 @@
-﻿namespace Jelly.MultiTenantExample.MultiTenancyMiddleware
+﻿namespace Eodg.MultiTenancy.Middleware
 {
     /// <summary>
     /// Abstract class to be implemented to allow the middleware to utilize multitenancy

@@ -17,7 +17,7 @@ This library allows you to incorporate multitenancy into a .net core 2.0 web api
      ```
      var multiTenancyMiddlewareOptions = new MultiTenancyMiddlewareOptions
      {
-         HeaderKey = "Account-Id"
+         TenantIdHeaderKey = "Account-Id"
      };
 
      services.AddSingleton(multiTenancyMiddlewareOptions);
@@ -28,11 +28,11 @@ This library allows you to incorporate multitenancy into a .net core 2.0 web api
     `private IMultiTenancyResolverService _multiTenancyResolverService;`
    * Add the following method:
      ```C#
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseSqlServer(_multiTenancyResolverService.ConnectionString);
-        base.OnConfiguring(optionsBuilder);
-    }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(_multiTenancyResolverService.ConnectionString);
+            base.OnConfiguring(optionsBuilder);
+        }
      ```
 
 ## How do you use it?

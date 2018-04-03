@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Jelly.MultiTenantExample.MultiTenancyMiddleware
+namespace Eodg.MultiTenancy.Middleware
 {
     /// <summary>
     /// `MultiTenancyMiddleware` - This is the entry and exit
@@ -25,13 +25,16 @@ namespace Jelly.MultiTenantExample.MultiTenancyMiddleware
                 var innerException = new ArgumentNullException("`options` parameter cannot be null.");
                 throw new MultiTenancyMiddlewareException("Error in MultiTenancyMiddleware Library. See Inner Exception for details.", innerException);
             }
-            else if (string.IsNullOrEmpty(options.TenantIdHeaderKey))
+            else if (options.UseHeaderKey)
             {
-                var innerException = new ArgumentException("`options` parameter must contain a value for `HeaderKey` property.");
-                throw new MultiTenancyMiddlewareException("Error in MultiTenancyMiddleware Library. See Inner Exception for details.", innerException);
-            }
+                if (string.IsNullOrEmpty(options.TenantIdHeaderKey))
+                {
+                    var innerException = new ArgumentException("`options` parameter must contain a value for `HeaderKey` property when `UseHeaderKey` value is `true`.");
+                    throw new MultiTenancyMiddlewareException("Error in MultiTenancyMiddleware Library. See Inner Exception for details.", innerException);
+                }
 
-            _accountIdHeaderKey = options.TenantIdHeaderKey;
+                _accountIdHeaderKey = options.TenantIdHeaderKey;
+            }
 
             _next = next;
         }

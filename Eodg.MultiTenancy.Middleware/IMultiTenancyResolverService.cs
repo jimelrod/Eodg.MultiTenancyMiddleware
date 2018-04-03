@@ -1,4 +1,4 @@
-﻿namespace Jelly.MultiTenantExample.MultiTenancyMiddleware
+﻿namespace Eodg.MultiTenancy.Middleware
 {
     public interface IMultiTenancyResolverService
     {

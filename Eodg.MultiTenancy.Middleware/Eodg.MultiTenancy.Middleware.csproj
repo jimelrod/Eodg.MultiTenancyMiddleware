@@ -2,6 +2,21 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.3.0-aplha</Version>
+    <Authors>Jim Elrod</Authors>
+    <Company>EODG</Company>
+    <Description>Middleware to allow for multi-tenancy in .net core web api applications.</Description>
+    <Copyright>2018</Copyright>
+    <PackageLicenseUrl>https://github.com/jimelrod/MultiTenancyMiddleware/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/jimelrod/MultiTenancyMiddleware</RepositoryUrl>
+    <PackageReleaseNotes />
+    <PackageTags>web dotnet core multitenancy multi-tenancy middleware</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netcoreapp2.0\Eodg.MultiTenancy.Middleware.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

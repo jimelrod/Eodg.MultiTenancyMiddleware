@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 
-namespace Jelly.MultiTenantExample.MultiTenancyMiddleware
+namespace Eodg.MultiTenancy.Middleware
 {
     /// <summary>
     /// Class to house extension method for use in the web application's `Startup.cs`

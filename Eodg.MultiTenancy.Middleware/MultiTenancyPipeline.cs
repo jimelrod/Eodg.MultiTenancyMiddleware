@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 
-namespace Jelly.MultiTenantExample.MultiTenancyMiddleware
+namespace Eodg.MultiTenancy.Middleware
 {
     /// <summary>
     /// Pipeline class to allow for middleware to be applied

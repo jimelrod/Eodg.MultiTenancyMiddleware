@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Jelly.MultiTenantExample.MultiTenancyMiddleware
+namespace Eodg.MultiTenancy.Middleware
 {
     /// <summary>
     /// Static utility/extension class

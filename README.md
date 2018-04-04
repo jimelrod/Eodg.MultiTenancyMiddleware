@@ -1,4 +1,6 @@
-﻿# MultiTenancyMiddleware
+﻿// TODO: This doc is out of date...
+
+# MultiTenancyMiddleware
 ###### It's a little black box... kind of
 
 This library allows you to incorporate multitenancy into a .net core 2.0 web api project. After setting up a handful of things (outlined below), you will be able to make a request, and by adding a header to said request containing the account id of the tenant for whose data you want to access you can get said data.

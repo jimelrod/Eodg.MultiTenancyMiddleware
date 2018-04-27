@@ -1,26 +1,38 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Eodg.MultiTenancy.Middleware
 {
     /// <summary>
     /// Abstract class to be implemented to allow the middleware to utilize multitenancy
     /// </summary>
-    public abstract class MultiTenancyResolverService : IMultiTenancyResolverService
+    public abstract class MultiTenancyResolverService
     {
         /// <summary>
         /// Houses the connection strings
         /// </summary>
-        public abstract Dictionary<string, string> ConnectionStringsByName { get; protected set; }
+        private Dictionary<string, string> _connectionStringsByName;
 
-        /// <summary>
-        /// Implementation to set the `ConnectionStringsByName` values.
-        /// </summary>
-        /// <param name="accountId">Account Id of the tenant database</param>
-        public abstract void SetConnectionStrings(string accountId);
+        protected MultiTenancyResolverService()
+        {
+            _connectionStringsByName = new Dictionary<string, string>();
+        }
 
-        /// <summary>
-        /// Implementation to set the `ConnectionStringsByName` values.
-        /// </summary>
-        public abstract void SetConnectionStrings();
+        public abstract void ResolveConnectionStrings(string accountId);
+
+        protected void AddConnectionString(string key, string connectionString)
+        {
+            _connectionStringsByName.Add(key, connectionString);
+        }
+
+        protected string GetConnectionString(string key)
+        {
+            return _connectionStringsByName[key];
+        }
+
+        protected IList<string> GetGetAllConnectionStringKeys()
+        {
+            return _connectionStringsByName.Keys.ToList();
+        }
     }
 }

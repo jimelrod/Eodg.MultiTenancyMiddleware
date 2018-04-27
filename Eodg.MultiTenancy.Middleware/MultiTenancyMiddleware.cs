@@ -20,22 +20,9 @@ namespace Eodg.MultiTenancy.Middleware
         /// <param name="options">`MultiTenancyMiddlewareOptions` instance</param>
         public MultiTenancyMiddleware(RequestDelegate next, MultiTenancyMiddlewareOptions options)
         {
+            Validate(options);
+           
             _options = options;
-
-            if (_options == null)
-            {
-                var innerException = new ArgumentNullException("`options` parameter cannot be null.");
-                throw new MultiTenancyMiddlewareException("Error in MultiTenancyMiddleware Library. See Inner Exception for details.", innerException);
-            }
-            else if (_options.UseHeaderKey)
-            {
-                if (string.IsNullOrEmpty(_options.TenantIdHeaderKey))
-                {
-                    var innerException = new ArgumentException("`options` parameter must contain a value for `HeaderKey` property when `UseHeaderKey` value is `true`.");
-                    throw new MultiTenancyMiddlewareException("Error in MultiTenancyMiddleware Library. See Inner Exception for details.", innerException);
-                }
-            }
-
             _next = next;
         }
 
@@ -49,72 +36,38 @@ namespace Eodg.MultiTenancy.Middleware
         {
             try
             {
-                if (_options.UseHeaderKey)
-                {
-                    SetConnectionStrings(context, multiTenancyResolverService, _options.TenantIdHeaderKey);
-                }
-                else
-                {
-                    SetConnectionStrings(multiTenancyResolverService);
-                }
-                
-                // Go on to the next piece of midleware in the pipeline
-                await _next(context);
+                // The "keyed" `Headers` property returns an array of comma-seperated values...
+                //  But since we should have only a single value, we're going to use this magic `0`
+                var accountId = context.Request.Headers[_options.TenantIdHeaderKey][0];
+
+                // TODO: Validate account id....
+
+                multiTenancyResolverService.ResolveConnectionStrings(accountId);
             }
-
-            // TODO: Actually figure out exception handling
-
-            // This let's folks know it's something fucked up on the middleware's end... I think...
-            catch (MultiTenancyMiddlewareException ex)
-            {
-                context.Response.StatusCode = 400;
-                await context.Response.WriteAsync($"Error parsing account id... {ex.ToString(true)} ");
-
-                return;
-            }
-            // A veritable "Catch-All" - see what I did there?
             catch (Exception ex)
             {
-                // Just assume it's a bad request...
-                context.Response.StatusCode = 400;
-                await context.Response.WriteAsync($"Account ID not found (possibly... here's what happened in the exception)...{ex.ToString(true)} ");
-
-                return;
+                throw new MultiTenancyMiddlewareException("Unable to resolve connection string(s). See Inner Exception for details...", ex);
             }
+
+            // Go on to the next piece of midleware in the pipeline
+            await _next(context);
         }
 
-        private void SetConnectionStrings(HttpContext context, IMultiTenancyResolverService multiTenancyResolverService, string accountIdHeaderKey)
+        /// <summary>
+        /// Validates the `options` parameter of the Constructor
+        /// </summary>
+        /// <param name="options">options to validate</param>
+        private static void Validate(MultiTenancyMiddlewareOptions options)
         {
-            // Whenever this method gets invoked, we expect a header with a key of `_accountIdHeaderKey`
-            if (!context.Request.Headers.ContainsKey(accountIdHeaderKey))
+            if (options == null)
             {
-                // Kill it if it ain't there!
-                throw new MultiTenancyMiddlewareException($"{accountIdHeaderKey} header not supplied.");
+                var innerException = new ArgumentNullException("`options` parameter cannot be null.");
+                throw new MultiTenancyMiddlewareException("Error in MultiTenancyMiddleware Library. See Inner Exception for details.", innerException);
             }
-
-            // The "keyed" `Headers` property returns an array of comma-seperated values...
-            //  But since we have only a single value, we're going to use this magic `0`
-            var accountId = context.Request.Headers[accountIdHeaderKey][0];
-
-            try
+            else if (string.IsNullOrEmpty(options.TenantIdHeaderKey))
             {
-                multiTenancyResolverService.SetConnectionStrings(accountId);
-            }
-            catch (Exception ex)
-            {
-                throw new MultiTenancyMiddlewareException("Unable to set connection string. See Inner Exception for details...", ex);
-            }
-        }
-
-        private void SetConnectionStrings(IMultiTenancyResolverService multiTenancyResolverService)
-        {
-            try
-            {
-                multiTenancyResolverService.SetConnectionStrings();
-            }
-            catch (Exception ex)
-            {
-                throw new MultiTenancyMiddlewareException("Unable to set connection string. See Inner Exception for details...", ex);
+                var innerException = new ArgumentException("`options` parameter must contain a value for `HeaderKey` property when `UseHeaderKey` value is `true`.");
+                throw new MultiTenancyMiddlewareException("Error in MultiTenancyMiddleware Library. See Inner Exception for details.", innerException);
             }
         }
     }

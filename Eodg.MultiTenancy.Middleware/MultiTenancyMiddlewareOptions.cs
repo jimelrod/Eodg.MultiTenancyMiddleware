@@ -3,6 +3,5 @@
     public class MultiTenancyMiddlewareOptions
     {
         public string TenantIdHeaderKey { get; set; }
-        public bool UseHeaderKey { get; set; }
     }
 }
